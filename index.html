@@ -1029,7 +1029,7 @@
             // ============================================================
             // KONFIGURASI
             // ============================================================
-            const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxUkC_p_xWisLm4zXFFzezR2QQz8U9Lepkg22dn7OMthSsT_SA7jtB6vvQsiWMhEGu2/exec';
+            const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwHLVB-riFxFJfbJMgZXMeUYPtc5R-VHo9CcCRKg48B4j05ZOrJVBNpK95ab1DjryIX/exec';
             const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
             // ============================================================
@@ -1214,12 +1214,16 @@
                 previewContentEl.innerHTML = '';
             }
 
+            // ============================================================
+            // PERBAIKAN PREVIEW PDF - Fungsi renderPreview yang ditingkatkan
+            // ============================================================
             function renderPreview(file, container, ext) {
                 if (container._cleanupBlob) {
                     container._cleanupBlob();
                     container._cleanupBlob = null;
                 }
                 container.innerHTML = '';
+                
                 if (['jpg', 'jpeg', 'png'].includes(ext)) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
@@ -1227,6 +1231,9 @@
                         img.src = e.target.result;
                         img.alt = 'Preview';
                         img.loading = 'lazy';
+                        img.style.maxWidth = '100%';
+                        img.style.maxHeight = '280px';
+                        img.style.objectFit = 'contain';
                         img.onerror = () => {
                             container.innerHTML = '<div class="pdf-fallback"><i class="fa-solid fa-image"></i><span>Gagal memuat pratinjau</span></div>';
                         };
@@ -1234,13 +1241,39 @@
                     };
                     reader.readAsDataURL(file);
                 } else if (ext === 'pdf') {
+                    // Perbaikan: Gunakan embed dengan viewer Google
                     const blobUrl = URL.createObjectURL(file);
-                    const iframe = document.createElement('iframe');
-                    iframe.src = blobUrl;
-                    iframe.title = 'Preview PDF';
-                    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-                    container.appendChild(iframe);
+                    container.innerHTML = `
+                        <div style="width:100%; height:280px; position:relative; background:#f5f5f5; border-radius:6px; overflow:hidden;">
+                            <iframe 
+                                src="${blobUrl}#toolbar=1&navpanes=1&scrollbar=1"
+                                style="width:100%; height:100%; border:none; border-radius:6px;"
+                                title="Preview PDF"
+                                sandbox="allow-scripts allow-same-origin allow-modals"
+                                loading="lazy"
+                            ></iframe>
+                            <div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.7); color:white; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; pointer-events:none;">
+                                <i class="fa-solid fa-file-pdf" style="margin-right:4px;"></i> PDF
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Simpan cleanup untuk revoke URL
                     container._cleanupBlob = () => URL.revokeObjectURL(blobUrl);
+                    
+                    // Alternative: Jika embed gagal, tampilkan fallback
+                    const iframe = container.querySelector('iframe');
+                    if (iframe) {
+                        iframe.onerror = function() {
+                            container.innerHTML = `
+                                <div class="pdf-fallback">
+                                    <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:#ef4444;"></i>
+                                    <span style="font-weight:600;">PDF Tidak Dapat Dipratinjau</span>
+                                    <span style="font-size:0.75rem; color:#6b7280;">Klik download untuk melihat file</span>
+                                </div>
+                            `;
+                        };
+                    }
                 }
             }
 
