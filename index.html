@@ -162,11 +162,10 @@
 
 <script>
     (function() {
-        // Ganti dengan URL Web App terbaru setelah deploy ulang
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzv_FrKwTRuE9ll_F7nxKd2FP1rYwkAWopsaLvdfJPBVoxS6MMteDMp0KBtr_MA88xe/exec';
-        const MAX_SIZE = 10 * 1024 * 1024;
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxkm49iFGirV3n9-HwEdbQBuKkTxO1lwyAFC7ZV4iniYtgNA0G-AvvOdKjpD8grz0w5/exec';
+        const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
-        // DOM
+        // DOM elements
         const form = document.getElementById('uploadForm');
         const nim = document.getElementById('nim');
         const nimErr = document.getElementById('nimError');
@@ -232,7 +231,17 @@
             return true;
         }
 
-        // Preview file
+        // Helper: convert file to base64 string
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result); // includes data:*;base64,...
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Preview
         function tampilkanPreview(file, area, prevWrap, prevName, prevCont) {
             if (!file) return;
             if (file.size > MAX_SIZE) {
@@ -317,38 +326,37 @@
             submitBtn.innerHTML = '<span class="spinner"></span> Mengirim...';
 
             try {
-                const fd = new FormData();
-                fd.append('namaLengkap', document.getElementById('namaLengkap').value.trim() || 'NN');
-                fd.append('nim', nim.value.trim());
-                fd.append('judulTesis', document.getElementById('judulTesis').value.trim());
-                fd.append('judulArtikel', document.getElementById('judulArtikel').value.trim());
-                fd.append('linkSinta', linkSinta);
-                fd.append('namaJurnal', document.getElementById('namaJurnal').value.trim());
-                fd.append('linkJurnalLoA', linkJurnal);
-                fd.append('semester', semester.folderName);
-                fd.append('semesterCode', semester.code);
-                fd.append('timestamp', new Date().toISOString());
+                const payload = {
+                    namaLengkap: document.getElementById('namaLengkap').value.trim() || 'NN',
+                    nim: nim.value.trim(),
+                    judulTesis: document.getElementById('judulTesis').value.trim(),
+                    judulArtikel: document.getElementById('judulArtikel').value.trim(),
+                    linkSinta: linkSinta,
+                    namaJurnal: document.getElementById('namaJurnal').value.trim(),
+                    linkJurnalLoA: linkJurnal,
+                    semester: semester.folderName,
+                    semesterCode: semester.code,
+                    timestamp: new Date().toISOString()
+                };
 
+                // Convert files to base64
                 if (hasBukti) {
-                    fd.append('fileBuktiSubmit', fileBukti.files[0]);
-                    fd.append('fileBuktiSubmitName', fileBukti.files[0].name);
-                    console.log('📎 Bukti:', fileBukti.files[0].name, fileBukti.files[0].size);
-                } else { console.warn('⚠️ Tidak ada file bukti'); }
+                    payload.fileBuktiSubmitBase64 = await fileToBase64(fileBukti.files[0]);
+                    payload.fileBuktiSubmitName = fileBukti.files[0].name;
+                }
                 if (hasLoA) {
-                    fd.append('fileLoA', fileLoA.files[0]);
-                    fd.append('fileLoAName', fileLoA.files[0].name);
-                    console.log('📎 LoA:', fileLoA.files[0].name, fileLoA.files[0].size);
-                } else { console.warn('⚠️ Tidak ada file loa'); }
-
-                console.log('🚀 Mengirim FormData...');
-                for (let pair of fd.entries()) {
-                    console.log(pair[0], pair[1] instanceof File ? `[File: ${pair[1].name}]` : pair[1]);
+                    payload.fileLoABase64 = await fileToBase64(fileLoA.files[0]);
+                    payload.fileLoAName = fileLoA.files[0].name;
                 }
 
-                const resp = await fetch(GAS_URL, { method: 'POST', body: fd });
-                if (!resp.ok) throw new Error('Server error: ' + resp.status);
-                const result = await resp.json();
-                console.log('📬', result);
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) throw new Error('Server error: ' + response.status);
+                const result = await response.json();
 
                 if (result.success) {
                     modalDetail.innerHTML = `
@@ -366,8 +374,8 @@
                     throw new Error(result.message || 'Gagal');
                 }
             } catch (err) {
-                console.error('❌', err);
                 showToast('❌ ' + err.message, 'error-toast');
+                console.error(err);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<span>📨</span> Kirim Dokumen';
