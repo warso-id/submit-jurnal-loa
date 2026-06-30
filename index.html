@@ -7,7 +7,7 @@
     <meta name="description" content="Form Upload Bukti Submit Jurnal & LoA - Secure & Elegant">
     <meta name="theme-color" content="#6d28d9">
     
-    <!-- Perbaikan: mobile-web-app-capable (bukan apple-) -->
+    <!-- PWA & Mobile Friendly -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
@@ -31,7 +31,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* ========== CSS SAMA PERSIS SEPERTI SEBELUMNYA ========== */
+        /* ============================================================
+           GLOBAL STYLES
+           ============================================================ */
         :root {
             --hue: 260;
             --primary: hsl(var(--hue), 80%, 55%);
@@ -113,6 +115,7 @@
             75% { background-position: 50% 100%; }
         }
 
+        /* Dekorasi latar belakang */
         .bg-orb {
             position: fixed;
             border-radius: 50%;
@@ -122,30 +125,10 @@
             z-index: 0;
             animation: floatOrb 12s ease-in-out infinite;
         }
-        .bg-orb.orb-1 {
-            width: 280px; height: 280px;
-            background: hsl(calc(var(--hue) + 20), 70%, 65%);
-            top: -50px; right: -70px;
-            animation-delay: 0s; animation-duration: 14s;
-        }
-        .bg-orb.orb-2 {
-            width: 200px; height: 200px;
-            background: hsl(calc(var(--hue) + 50), 65%, 60%);
-            bottom: 15%; left: -60px;
-            animation-delay: -4s; animation-duration: 16s;
-        }
-        .bg-orb.orb-3 {
-            width: 170px; height: 170px;
-            background: hsl(calc(var(--hue) - 30), 60%, 55%);
-            top: 45%; right: -40px;
-            animation-delay: -8s; animation-duration: 18s;
-        }
-        .bg-orb.orb-4 {
-            width: 140px; height: 140px;
-            background: hsl(var(--hue), 55%, 70%);
-            bottom: 30%; right: 25%;
-            animation-delay: -2s; animation-duration: 13s;
-        }
+        .bg-orb.orb-1 { width: 280px; height: 280px; background: hsl(calc(var(--hue) + 20), 70%, 65%); top: -50px; right: -70px; animation-delay: 0s; animation-duration: 14s; }
+        .bg-orb.orb-2 { width: 200px; height: 200px; background: hsl(calc(var(--hue) + 50), 65%, 60%); bottom: 15%; left: -60px; animation-delay: -4s; animation-duration: 16s; }
+        .bg-orb.orb-3 { width: 170px; height: 170px; background: hsl(calc(var(--hue) - 30), 60%, 55%); top: 45%; right: -40px; animation-delay: -8s; animation-duration: 18s; }
+        .bg-orb.orb-4 { width: 140px; height: 140px; background: hsl(var(--hue), 55%, 70%); bottom: 30%; right: 25%; animation-delay: -2s; animation-duration: 13s; }
         @keyframes floatOrb {
             0%, 100% { transform: translate(0, 0) scale(1); }
             25% { transform: translate(25px, -35px) scale(1.1); }
@@ -153,6 +136,7 @@
             75% { transform: translate(-30px, -20px) scale(1.05); }
         }
 
+        /* Partikel bintang */
         .sparkle-container {
             position: fixed;
             inset: 0;
@@ -176,6 +160,9 @@
             100% { opacity: 0; transform: translateY(-100px) scale(0); }
         }
 
+        /* ============================================================
+           CARD / FORM CONTAINER
+           ============================================================ */
         .form-container {
             width: 100%;
             max-width: 680px;
@@ -212,6 +199,9 @@
             50% { background-position: 100% 50%; }
         }
 
+        /* ============================================================
+           HEADER
+           ============================================================ */
         .form-header {
             text-align: center;
             margin-bottom: 20px;
@@ -237,8 +227,6 @@
             box-shadow: 0 12px 32px rgba(109, 40, 217, 0.3);
             background: white;
             padding: 8px;
-            /* loading eager untuk menghindari placeholder */
-            loading: eager;
         }
         .form-header .logo-wrapper::after {
             content: '';
@@ -266,6 +254,7 @@
             letter-spacing: -0.01em;
         }
 
+        /* Semester badge */
         .semester-badge {
             display: inline-flex;
             align-items: center;
@@ -291,6 +280,9 @@
         }
         .semester-badge i { color: var(--primary); font-size: 0.7rem; }
 
+        /* ============================================================
+           FORM GROUPS
+           ============================================================ */
         .form-group {
             margin-bottom: 14px;
             position: relative;
@@ -393,6 +385,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ============================================================
+           UPLOAD AREA
+           ============================================================ */
         .upload-wrapper { position: relative; }
         .upload-area {
             display: flex;
@@ -459,6 +454,9 @@
             z-index: 2;
         }
 
+        /* ============================================================
+           PREVIEW
+           ============================================================ */
         .preview-container {
             display: none;
             margin-top: 8px;
@@ -556,6 +554,9 @@
         }
         .preview-content .pdf-fallback i { font-size: 2.5rem; color: #ef4444; }
 
+        /* ============================================================
+           SECTION DIVIDER
+           ============================================================ */
         .section-divider {
             border: none;
             border-top: 1.5px solid #e5e7eb;
@@ -579,6 +580,9 @@
             border: 1px solid #e5e7eb;
         }
 
+        /* ============================================================
+           SUBMIT BUTTON
+           ============================================================ */
         .submit-btn {
             width: 100%;
             padding: 14px 22px;
@@ -646,6 +650,7 @@
         .submit-btn.loading .btn-icon { display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
+        /* Ripple effect */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -656,6 +661,9 @@
         }
         @keyframes rippleEffect { to { transform: scale(4); opacity: 0; } }
 
+        /* ============================================================
+           MODAL
+           ============================================================ */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -751,6 +759,9 @@
         }
         .modal-close-btn:active { transform: scale(0.95); }
 
+        /* ============================================================
+           LOADING OVERLAY
+           ============================================================ */
         .loading-overlay {
             position: fixed;
             inset: 0;
@@ -775,6 +786,9 @@
             box-shadow: 0 4px 16px rgba(109, 40, 217, 0.2);
         }
 
+        /* ============================================================
+           TOAST NOTIFICATION
+           ============================================================ */
         .toast {
             position: fixed;
             top: 16px;
@@ -800,7 +814,9 @@
         .toast.error-toast { background: #dc2626; box-shadow: 0 10px 28px rgba(220, 38, 38, 0.35); }
         .toast.success-toast { background: #059669; box-shadow: 0 10px 28px rgba(5, 150, 105, 0.35); }
 
-        /* Responsive */
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
         @media (max-width: 640px) {
             body { padding: 4px; }
             .bg-orb, .sparkle-container { display: none; }
@@ -834,6 +850,7 @@
             *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
             .bg-orb, .sparkle { display: none; }
         }
+        /* Dark mode */
         @media (prefers-color-scheme: dark) {
             :root {
                 --card-bg: rgba(30, 25, 60, 0.85);
@@ -866,23 +883,25 @@
     </style>
 </head>
 <body>
-    <!-- ====== BODY SAMA PERSIS ====== -->
+    <!-- Dekorasi latar -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
     <div class="bg-orb orb-4"></div>
     <div class="sparkle-container" id="sparkleContainer"></div>
 
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
+    <!-- Loading overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner-large"></div>
     </div>
 
+    <!-- Form container -->
     <div class="form-container" id="formContainer">
         <div class="form-header">
             <div class="logo-wrapper">
-                <!-- Logo dengan loading eager agar langsung tampil -->
                 <img src="https://i.imgur.com/JkxRYd6.png" alt="Logo Upload" width="500" height="500" loading="eager" referrerpolicy="no-referrer" crossorigin="anonymous">
             </div>
             <h1>Upload Bukti Submit Jurnal & LoA</h1>
@@ -897,50 +916,54 @@
         </div>
 
         <form id="uploadForm" novalidate autocomplete="off">
-            <!-- Semua form group sama -->
+            <!-- Nama Lengkap -->
             <div class="form-group">
                 <label class="form-label" for="namaLengkap">
                     <i class="fa-solid fa-user-pen"></i> Nama Lengkap
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="text" class="form-input" id="namaLengkap" name="namaLengkap"
-                placeholder="Tulis nama lengkap Anda" maxlength="100" autocomplete="name">
+                       placeholder="Tulis nama lengkap Anda" maxlength="100" autocomplete="name">
             </div>
 
+            <!-- NIM -->
             <div class="form-group">
                 <label class="form-label" for="nim">
                     <i class="fa-solid fa-fingerprint"></i> NIM
                     <span class="required-star">*</span>
                 </label>
                 <input type="text" class="form-input" id="nim" name="nim"
-                placeholder="Contoh: 202403001" maxlength="9" required
-                inputmode="numeric" pattern="[0-9]{9}" autocomplete="off">
+                       placeholder="Contoh: 202403001" maxlength="9" required
+                       inputmode="numeric" pattern="[0-9]{9}" autocomplete="off">
                 <div class="error-message" id="nimError">
                     <i class="fa-solid fa-circle-exclamation"></i>
                     <span id="nimErrorText"></span>
                 </div>
             </div>
 
+            <!-- Judul Tesis -->
             <div class="form-group">
                 <label class="form-label" for="judulTesis">
                     <i class="fa-solid fa-book-open"></i> Judul Tesis
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="text" class="form-input" id="judulTesis" name="judulTesis"
-                placeholder="Masukkan judul tesis" maxlength="300" autocomplete="off">
+                       placeholder="Masukkan judul tesis" maxlength="300" autocomplete="off">
             </div>
 
+            <!-- Judul Artikel -->
             <div class="form-group">
                 <label class="form-label" for="judulArtikel">
                     <i class="fa-solid fa-file-signature"></i> Judul Artikel
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="text" class="form-input" id="judulArtikel" name="judulArtikel"
-                placeholder="Masukkan judul artikel" maxlength="300" autocomplete="off">
+                       placeholder="Masukkan judul artikel" maxlength="300" autocomplete="off">
             </div>
 
             <hr class="section-divider"><span>📎 Dokumen & Link</span></hr>
 
+            <!-- Bukti Submit -->
             <div class="form-group">
                 <label class="form-label" for="fileBuktiSubmit">
                     <i class="fa-solid fa-file-arrow-up"></i> Bukti Submit Jurnal
@@ -952,7 +975,7 @@
                         <span class="upload-text">Pilih File</span>
                         <span class="upload-hint">PDF/JPG/PNG</span>
                         <input type="file" id="fileBuktiSubmit" name="fileBuktiSubmit"
-                        accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Bukti Submit Jurnal">
+                               accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Bukti Submit Jurnal">
                     </div>
                 </div>
                 <div class="preview-container" id="previewBukti">
@@ -966,15 +989,17 @@
                 </div>
             </div>
 
+            <!-- Link Sinta -->
             <div class="form-group">
                 <label class="form-label" for="linkSinta">
                     <i class="fa-solid fa-link"></i> Link Sinta / Akreditasi
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="url" class="form-input" id="linkSinta" name="linkSinta"
-                placeholder="https://sinta.kemdikbud.go.id/..." autocomplete="off">
+                       placeholder="https://sinta.kemdikbud.go.id/..." autocomplete="off">
             </div>
 
+            <!-- Dokumen LoA -->
             <div class="form-group">
                 <label class="form-label" for="fileLoA">
                     <i class="fa-solid fa-file-arrow-up"></i> Dokumen LoA
@@ -986,7 +1011,7 @@
                         <span class="upload-text">Pilih File</span>
                         <span class="upload-hint">PDF/JPG/PNG</span>
                         <input type="file" id="fileLoA" name="fileLoA"
-                        accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Dokumen LoA">
+                               accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Dokumen LoA">
                     </div>
                 </div>
                 <div class="preview-container" id="previewLoA">
@@ -1000,24 +1025,27 @@
                 </div>
             </div>
 
+            <!-- Nama Jurnal -->
             <div class="form-group">
                 <label class="form-label" for="namaJurnal">
                     <i class="fa-solid fa-newspaper"></i> Nama Jurnal
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="text" class="form-input" id="namaJurnal" name="namaJurnal"
-                placeholder="Masukkan nama jurnal" maxlength="200" autocomplete="off">
+                       placeholder="Masukkan nama jurnal" maxlength="200" autocomplete="off">
             </div>
 
+            <!-- Link Jurnal LoA -->
             <div class="form-group">
                 <label class="form-label" for="linkJurnalLoA">
                     <i class="fa-solid fa-link"></i> Link Jurnal LoA
                     <span class="optional-tag">Opsional</span>
                 </label>
                 <input type="url" class="form-input" id="linkJurnalLoA" name="linkJurnalLoA"
-                placeholder="https://..." autocomplete="off">
+                       placeholder="https://..." autocomplete="off">
             </div>
 
+            <!-- Submit -->
             <button type="submit" class="submit-btn" id="submitBtn">
                 <span class="spinner"></span>
                 <i class="fa-solid fa-paper-plane btn-icon"></i>
@@ -1026,6 +1054,7 @@
         </form>
     </div>
 
+    <!-- Modal sukses -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-dialog">
             <div class="modal-icon">
@@ -1040,10 +1069,10 @@
         </div>
     </div>
 
+    <!-- ============================================================
+    JAVASCRIPT - LOGIKA LENGKAP
+    ============================================================ -->
     <script>
-        // ============================================================
-        // JAVASCRIPT SAMA PERSIS SEPERTI SEBELUMNYA (tidak diubah)
-        // ============================================================
         (function() {
             'use strict';
 
@@ -1235,9 +1264,6 @@
                 previewContentEl.innerHTML = '';
             }
 
-            // ============================================================
-            // PERBAIKAN PREVIEW PDF
-            // ============================================================
             function renderPreview(file, container, ext) {
                 if (container._cleanupBlob) {
                     container._cleanupBlob();
@@ -1301,7 +1327,7 @@
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
             }
 
-            // Bind events
+            // Event listeners untuk upload
             fileBuktiSubmit.addEventListener('change', function() {
                 handleFileSelect(this, uploadAreaBukti, previewBukti, previewBuktiName, previewBuktiContent);
             });
@@ -1309,10 +1335,20 @@
                 e.stopPropagation();
                 clearFileUpload(fileBuktiSubmit, uploadAreaBukti, previewBukti, previewBuktiContent);
             });
-            uploadAreaBukti.addEventListener('dragover', function(e) { e.preventDefault(); e.stopPropagation(); this.classList.add('drag-over'); });
-            uploadAreaBukti.addEventListener('dragleave', function(e) { e.preventDefault(); e.stopPropagation(); this.classList.remove('drag-over'); });
+            uploadAreaBukti.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('drag-over');
+            });
+            uploadAreaBukti.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drag-over');
+            });
             uploadAreaBukti.addEventListener('drop', function(e) {
-                e.preventDefault(); e.stopPropagation(); this.classList.remove('drag-over');
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drag-over');
                 if (e.dataTransfer.files.length > 0) {
                     fileBuktiSubmit.files = e.dataTransfer.files;
                     handleFileSelect(fileBuktiSubmit, uploadAreaBukti, previewBukti, previewBuktiName, previewBuktiContent);
@@ -1326,10 +1362,20 @@
                 e.stopPropagation();
                 clearFileUpload(fileLoA, uploadAreaLoA, previewLoA, previewLoAContent);
             });
-            uploadAreaLoA.addEventListener('dragover', function(e) { e.preventDefault(); e.stopPropagation(); this.classList.add('drag-over'); });
-            uploadAreaLoA.addEventListener('dragleave', function(e) { e.preventDefault(); e.stopPropagation(); this.classList.remove('drag-over'); });
+            uploadAreaLoA.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.add('drag-over');
+            });
+            uploadAreaLoA.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drag-over');
+            });
             uploadAreaLoA.addEventListener('drop', function(e) {
-                e.preventDefault(); e.stopPropagation(); this.classList.remove('drag-over');
+                e.preventDefault();
+                e.stopPropagation();
+                this.classList.remove('drag-over');
                 if (e.dataTransfer.files.length > 0) {
                     fileLoA.files = e.dataTransfer.files;
                     handleFileSelect(fileLoA, uploadAreaLoA, previewLoA, previewLoAName, previewLoAContent);
@@ -1341,7 +1387,7 @@
             // ============================================================
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                
+
                 if (!validateNIM()) {
                     nimInput.focus();
                     showToast('⚠️ Periksa NIM Anda. Wajib 9 angka dan mengandung "03".', 'error-toast');
@@ -1390,24 +1436,24 @@
 
                     let response;
                     try {
-                        response = await fetch(GAS_WEBAPP_URL, { 
-                            method: 'POST', 
+                        response = await fetch(GAS_WEBAPP_URL, {
+                            method: 'POST',
                             body: formData
                         });
                     } catch (netErr) {
-                        saveToLocalStorage({ 
-                            namaLengkap, nim, 
-                            semester: currentSemester.folderName, 
-                            timestamp: new Date().toISOString(), 
-                            hasBuktiFile, hasLoAFile 
+                        saveToLocalStorage({
+                            namaLengkap, nim,
+                            semester: currentSemester.folderName,
+                            timestamp: new Date().toISOString(),
+                            hasBuktiFile, hasLoAFile
                         });
                         throw new Error('Gagal terhubung ke server. Data disimpan lokal & akan dikirim ulang saat koneksi tersedia.');
                     }
 
                     if (!response.ok) throw new Error(`Server error: ${response.status}`);
-                    
+
                     const result = await response.json();
-                    
+
                     if (result.success) {
                         modalDetail.innerHTML = `
                             <strong>📁 Semester:</strong> ${escapeHTML(currentSemester.label)}<br>
@@ -1489,7 +1535,7 @@
             // ============================================================
             console.log('✨ Form Upload Bukti Jurnal & LoA - Ready');
             console.log('📅 Semester:', currentSemester.label);
-            console.log('🔗 GAS URL:', GAS_WEBAPP_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE' ? 
+            console.log('🔗 GAS URL:', GAS_WEBAPP_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEBAPP_URL_HERE' ?
                 '⚠️ BELUM DIKONFIGURASI - Ganti dengan URL Web App Anda' : '✅ Terhubung');
         })();
     </script>
