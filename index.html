@@ -160,19 +160,30 @@
     const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzELt5o8V9XywqT_es2vPgo8eD1tkUMynv2prsl2mwBzClwBeaiqyfDMZghNUhY_j2l/exec';
 
     (function() {
+        // ✅ Logika semester diperbaiki sesuai kalender akademik Indonesia
         function getSemester() {
             const now = new Date();
-            const m = now.getMonth();
-            const y = now.getFullYear();
-            if (m >= 6 && m <= 11) {
-                return { label: `Semester Ganjil ${y}/${y+1}`, folderName: `Semester Ganjil ${y}-${y+1}`, code: `GANJIL_${y}_${y+1}` };
-            } else {
-                return { label: `Semester Genap ${y-1}/${y}`, folderName: `Semester Genap ${y-1}-${y}`, code: `GENAP_${y-1}_${y}` };
+            const month = now.getMonth(); // 0=Jan, 11=Des
+            const year = now.getFullYear();
+
+            if (month >= 8) { // September (8) - Desember (11) => Ganjil
+                return {
+                    label: `Semester Ganjil ${year}/${year+1}`,
+                    folderName: `Semester Ganjil ${year}-${year+1}`,
+                    code: `GANJIL_${year}_${year+1}`
+                };
+            } else { // Januari (0) - Agustus (7) => Genap
+                return {
+                    label: `Semester Genap ${year-1}/${year}`,
+                    folderName: `Semester Genap ${year-1}-${year}`,
+                    code: `GENAP_${year-1}_${year}`
+                };
             }
         }
         const semester = getSemester();
         document.getElementById('semesterLabel').textContent = semester.label;
 
+        // ... (sisa JavaScript sama persis seperti sebelumnya, tidak ada perubahan lain) ...
         const nim = document.getElementById('nim');
         const nimErr = document.getElementById('nimError');
         nim.addEventListener('input', () => {
@@ -281,7 +292,6 @@
                     payload.fileLoAName = fileLoA.files[0].name;
                 }
 
-                // Buat FormData dan tambahkan payload sebagai string JSON
                 const formData = new FormData();
                 formData.append('json', JSON.stringify(payload));
 
