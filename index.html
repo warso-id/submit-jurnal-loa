@@ -162,7 +162,8 @@
 
 <script>
     (function() {
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzohfaV-KbRm5vUxzNgEO-us-wv_HFX_aKYsETNZi5BXgrvrIqw4L7ufFdbj2nlq111IA/exec';
+        // Ganti dengan URL Web App terbaru setelah deploy ulang
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzv_FrKwTRuE9ll_F7nxKd2FP1rYwkAWopsaLvdfJPBVoxS6MMteDMp0KBtr_MA88xe/exec';
         const MAX_SIZE = 10 * 1024 * 1024;
 
         // DOM
@@ -177,16 +178,16 @@
 
         const fileBukti = document.getElementById('fileBuktiSubmit');
         const areaBukti = document.getElementById('uploadAreaBukti');
-        const prevBuktiCont = document.getElementById('previewBuktiContent');
-        const prevBuktiName = document.getElementById('previewBuktiName');
         const prevBukti = document.getElementById('previewBukti');
+        const prevBuktiName = document.getElementById('previewBuktiName');
+        const prevBuktiCont = document.getElementById('previewBuktiContent');
         const rmBukti = document.getElementById('removeBukti');
 
         const fileLoA = document.getElementById('fileLoA');
         const areaLoA = document.getElementById('uploadAreaLoA');
-        const prevLoACont = document.getElementById('previewLoAContent');
-        const prevLoAName = document.getElementById('previewLoAName');
         const prevLoA = document.getElementById('previewLoA');
+        const prevLoAName = document.getElementById('previewLoAName');
+        const prevLoACont = document.getElementById('previewLoAContent');
         const rmLoA = document.getElementById('removeLoA');
 
         // Semester
@@ -212,7 +213,7 @@
             toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
-        // NIM Validation
+        // NIM validation
         nim.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0,9);
             validateNIM();
@@ -231,12 +232,18 @@
             return true;
         }
 
-        // Helper untuk menampilkan preview file
-        function tampilkanPreview(file, area, prevCont, prevName, prevWrap) {
-            if (!file) return false;
-            if (file.size > MAX_SIZE) { showToast('Ukuran > 10MB', 'error-toast'); return false; }
+        // Preview file
+        function tampilkanPreview(file, area, prevWrap, prevName, prevCont) {
+            if (!file) return;
+            if (file.size > MAX_SIZE) {
+                showToast('Ukuran file > 10MB', 'error-toast');
+                return;
+            }
             const ext = file.name.split('.').pop().toLowerCase();
-            if (!['pdf','jpg','jpeg','png'].includes(ext)) { showToast('Format tidak didukung', 'error-toast'); return false; }
+            if (!['pdf','jpg','jpeg','png'].includes(ext)) {
+                showToast('Format tidak didukung', 'error-toast');
+                return;
+            }
             area.classList.add('has-file');
             prevName.textContent = file.name;
             prevWrap.classList.add('show');
@@ -247,7 +254,6 @@
             } else {
                 prevCont.innerHTML = `<div style="padding:20px; text-align:center;">📄 ${file.name}</div>`;
             }
-            return true;
         }
 
         function hapusPreview(input, area, prevWrap, prevCont) {
@@ -257,18 +263,16 @@
             prevCont.innerHTML = '';
         }
 
-        // Event untuk file Bukti
-        fileBukti.addEventListener('change', function() {
-            if (this.files.length) tampilkanPreview(this.files[0], areaBukti, prevBuktiCont, prevBuktiName, prevBukti);
+        fileBukti.addEventListener('change', () => {
+            if (fileBukti.files.length) tampilkanPreview(fileBukti.files[0], areaBukti, prevBukti, prevBuktiName, prevBuktiCont);
         });
         rmBukti.addEventListener('click', (e) => {
             e.stopPropagation();
             hapusPreview(fileBukti, areaBukti, prevBukti, prevBuktiCont);
         });
 
-        // Event untuk file LoA
-        fileLoA.addEventListener('change', function() {
-            if (this.files.length) tampilkanPreview(this.files[0], areaLoA, prevLoACont, prevLoAName, prevLoA);
+        fileLoA.addEventListener('change', () => {
+            if (fileLoA.files.length) tampilkanPreview(fileLoA.files[0], areaLoA, prevLoA, prevLoAName, prevLoACont);
         });
         rmLoA.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -276,7 +280,7 @@
         });
 
         // Drag & drop
-        function setupDrag(area, input, prevCont, prevName, prevWrap) {
+        function setupDrag(area, input, prevWrap, prevName, prevCont) {
             area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
             area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
             area.addEventListener('drop', e => {
@@ -284,19 +288,18 @@
                 area.classList.remove('drag-over');
                 if (e.dataTransfer.files.length) {
                     input.files = e.dataTransfer.files;
-                    tampilkanPreview(e.dataTransfer.files[0], area, prevCont, prevName, prevWrap);
+                    tampilkanPreview(e.dataTransfer.files[0], area, prevWrap, prevName, prevCont);
                 }
             });
         }
-        setupDrag(areaBukti, fileBukti, prevBuktiCont, prevBuktiName, prevBukti);
-        setupDrag(areaLoA, fileLoA, prevLoACont, prevLoAName, prevLoA);
+        setupDrag(areaBukti, fileBukti, prevBukti, prevBuktiName, prevBuktiCont);
+        setupDrag(areaLoA, fileLoA, prevLoA, prevLoAName, prevLoACont);
 
-        // SUBMIT FORM
+        // SUBMIT
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-
             if (!validateNIM()) {
-                showToast('Periksa NIM Anda!', 'error-toast');
+                showToast('Periksa NIM', 'error-toast');
                 nim.focus();
                 return;
             }
@@ -307,7 +310,7 @@
             const linkJurnal = document.getElementById('linkJurnalLoA').value.trim();
 
             if (!hasBukti && !hasLoA && !linkSinta && !linkJurnal) {
-                if (!confirm('Tidak ada file/link diisi. Lanjutkan?')) return;
+                if (!confirm('Tidak ada file/link. Lanjutkan?')) return;
             }
 
             submitBtn.disabled = true;
@@ -326,36 +329,26 @@
                 fd.append('semesterCode', semester.code);
                 fd.append('timestamp', new Date().toISOString());
 
-                // Tambahkan file hanya jika ada
                 if (hasBukti) {
                     fd.append('fileBuktiSubmit', fileBukti.files[0]);
                     fd.append('fileBuktiSubmitName', fileBukti.files[0].name);
                     console.log('📎 Bukti:', fileBukti.files[0].name, fileBukti.files[0].size);
-                } else {
-                    console.warn('⚠️ Tidak ada file bukti');
-                }
+                } else { console.warn('⚠️ Tidak ada file bukti'); }
                 if (hasLoA) {
                     fd.append('fileLoA', fileLoA.files[0]);
                     fd.append('fileLoAName', fileLoA.files[0].name);
                     console.log('📎 LoA:', fileLoA.files[0].name, fileLoA.files[0].size);
-                } else {
-                    console.warn('⚠️ Tidak ada file loa');
-                }
+                } else { console.warn('⚠️ Tidak ada file loa'); }
 
-                // Debug: cetak semua isi FormData
                 console.log('🚀 Mengirim FormData...');
                 for (let pair of fd.entries()) {
-                    console.log(pair[0], pair[1] instanceof File ? `[File: ${pair[1].name}, ${pair[1].size}]` : pair[1]);
+                    console.log(pair[0], pair[1] instanceof File ? `[File: ${pair[1].name}]` : pair[1]);
                 }
 
-                const response = await fetch(GAS_URL, {
-                    method: 'POST',
-                    body: fd
-                });
-
-                if (!response.ok) throw new Error('Server error ' + response.status);
-                const result = await response.json();
-                console.log('📬 Respons:', result);
+                const resp = await fetch(GAS_URL, { method: 'POST', body: fd });
+                if (!resp.ok) throw new Error('Server error: ' + resp.status);
+                const result = await resp.json();
+                console.log('📬', result);
 
                 if (result.success) {
                     modalDetail.innerHTML = `
@@ -381,7 +374,6 @@
             }
         });
 
-        // Modal
         document.getElementById('modalCloseBtn').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
