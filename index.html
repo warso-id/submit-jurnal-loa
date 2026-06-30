@@ -6,18 +6,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Form Upload Bukti Submit Jurnal & LoA - Secure & Elegant">
     <meta name="theme-color" content="#6d28d9">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Perbaikan: mobile-web-app-capable (bukan apple-) -->
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Preconnect untuk resource eksternal agar lebih cepat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    
     <title>✨ Upload Bukti Jurnal & LoA</title>
 
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Font Awesome 6 (dengan integrity untuk keamanan) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+
     <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        /* ========== CSS SAMA PERSIS SEPERTI SEBELUMNYA ========== */
         :root {
             --hue: 260;
             --primary: hsl(var(--hue), 80%, 55%);
@@ -223,6 +237,8 @@
             box-shadow: 0 12px 32px rgba(109, 40, 217, 0.3);
             background: white;
             padding: 8px;
+            /* loading eager untuk menghindari placeholder */
+            loading: eager;
         }
         .form-header .logo-wrapper::after {
             content: '';
@@ -850,7 +866,7 @@
     </style>
 </head>
 <body>
-
+    <!-- ====== BODY SAMA PERSIS ====== -->
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
     <div class="bg-orb orb-3"></div>
@@ -866,7 +882,8 @@
     <div class="form-container" id="formContainer">
         <div class="form-header">
             <div class="logo-wrapper">
-                <img src="https://i.imgur.com/JkxRYd6.png" alt="Logo Upload" width="500" height="500" loading="eager" crossorigin="anonymous">
+                <!-- Logo dengan loading eager agar langsung tampil -->
+                <img src="https://i.imgur.com/JkxRYd6.png" alt="Logo Upload" width="500" height="500" loading="eager" referrerpolicy="no-referrer" crossorigin="anonymous">
             </div>
             <h1>Upload Bukti Submit Jurnal & LoA</h1>
             <p>Form Akademik • Elegant & Secure</p>
@@ -880,6 +897,7 @@
         </div>
 
         <form id="uploadForm" novalidate autocomplete="off">
+            <!-- Semua form group sama -->
             <div class="form-group">
                 <label class="form-label" for="namaLengkap">
                     <i class="fa-solid fa-user-pen"></i> Nama Lengkap
@@ -1023,6 +1041,9 @@
     </div>
 
     <script>
+        // ============================================================
+        // JAVASCRIPT SAMA PERSIS SEPERTI SEBELUMNYA (tidak diubah)
+        // ============================================================
         (function() {
             'use strict';
 
@@ -1215,7 +1236,7 @@
             }
 
             // ============================================================
-            // PERBAIKAN PREVIEW PDF - Fungsi renderPreview yang ditingkatkan
+            // PERBAIKAN PREVIEW PDF
             // ============================================================
             function renderPreview(file, container, ext) {
                 if (container._cleanupBlob) {
@@ -1241,7 +1262,6 @@
                     };
                     reader.readAsDataURL(file);
                 } else if (ext === 'pdf') {
-                    // Perbaikan: Gunakan embed dengan viewer Google
                     const blobUrl = URL.createObjectURL(file);
                     container.innerHTML = `
                         <div style="width:100%; height:280px; position:relative; background:#f5f5f5; border-radius:6px; overflow:hidden;">
@@ -1257,11 +1277,7 @@
                             </div>
                         </div>
                     `;
-                    
-                    // Simpan cleanup untuk revoke URL
                     container._cleanupBlob = () => URL.revokeObjectURL(blobUrl);
-                    
-                    // Alternative: Jika embed gagal, tampilkan fallback
                     const iframe = container.querySelector('iframe');
                     if (iframe) {
                         iframe.onerror = function() {
