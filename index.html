@@ -261,7 +261,7 @@
             try {
                 const payload = {
                     namaLengkap: document.getElementById('namaLengkap').value.trim() || 'NN',
-                    nim: nim.value.trim(),          // <- pastikan NIM diambil langsung
+                    nim: nim.value.trim(),
                     judulTesis: document.getElementById('judulTesis').value.trim(),
                     judulArtikel: document.getElementById('judulArtikel').value.trim(),
                     linkSinta: linkSinta,
@@ -281,12 +281,13 @@
                     payload.fileLoAName = fileLoA.files[0].name;
                 }
 
-                console.log('Payload yang dikirim:', JSON.stringify(payload, null, 2)); // DEBUG
+                // Buat FormData dan tambahkan payload sebagai string JSON
+                const formData = new FormData();
+                formData.append('json', JSON.stringify(payload));
 
                 const response = await fetch(WEBAPP_URL, {
                     method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain' }
+                    body: formData
                 });
 
                 if (!response.ok) throw new Error('Server error ' + response.status);
