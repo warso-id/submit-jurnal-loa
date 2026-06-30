@@ -156,7 +156,7 @@
 </div>
 
 <script>
-    // Ganti dengan URL Web App terbaru
+    // Ganti dengan URL Web App Anda
     const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxkm49iFGirV3n9-HwEdbQBuKkTxO1lwyAFC7ZV4iniYtgNA0G-AvvOdKjpD8grz0w5/exec';
 
     (function() {
@@ -261,7 +261,7 @@
             try {
                 const payload = {
                     namaLengkap: document.getElementById('namaLengkap').value.trim() || 'NN',
-                    nim: nim.value.trim(),
+                    nim: nim.value.trim(),          // <- pastikan NIM diambil langsung
                     judulTesis: document.getElementById('judulTesis').value.trim(),
                     judulArtikel: document.getElementById('judulArtikel').value.trim(),
                     linkSinta: linkSinta,
@@ -281,7 +281,8 @@
                     payload.fileLoAName = fileLoA.files[0].name;
                 }
 
-                // PERBAIKAN KUNCI: header Content-Type text/plain
+                console.log('Payload yang dikirim:', JSON.stringify(payload, null, 2)); // DEBUG
+
                 const response = await fetch(WEBAPP_URL, {
                     method: 'POST',
                     body: JSON.stringify(payload),
@@ -307,6 +308,7 @@
                     throw new Error(result.message || 'Gagal');
                 }
             } catch (err) {
+                console.error('Error:', err);
                 showToast('❌ ' + err.message, 'error');
             } finally {
                 submitBtn.disabled = false;
