@@ -10,106 +10,67 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --hue: 260;
-            --primary: hsl(var(--hue), 80%, 55%);
-            --primary-dark: hsl(var(--hue), 80%, 35%);
-            --accent-1: hsl(calc(var(--hue) + 30), 75%, 55%);
-            --accent-2: hsl(calc(var(--hue) + 60), 70%, 60%);
-            --bg-start: hsl(var(--hue), 30%, 96%);
-            --bg-mid: hsl(calc(var(--hue) + 20), 25%, 94%);
-            --bg-end: hsl(calc(var(--hue) - 20), 20%, 92%);
-            --card-bg: rgba(255,255,255,0.88);
-            --text-primary: #1a1535;
-            --text-secondary: #5b5480;
+            --primary: hsl(260, 80%, 55%);
+            --accent-1: hsl(290, 75%, 55%);
+            --accent-2: hsl(320, 70%, 60%);
+            --bg: hsl(260, 30%, 96%);
+            --card: rgba(255,255,255,0.88);
+            --text: #1a1535;
             --success: #10b981;
             --danger: #ef4444;
             --radius: 14px;
-            --radius-lg: 20px;
-            --radius-2xl: 32px;
             --font: 'Plus Jakarta Sans', sans-serif;
-            --glass-blur: blur(22px);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { font-size: 16px; -webkit-tap-highlight-color: transparent; }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: var(--font);
-            background: linear-gradient(160deg, var(--bg-start), var(--bg-mid), var(--bg-end));
-            min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
-            color: var(--text-primary); padding: 10px;
+            background: linear-gradient(160deg, var(--bg), hsl(280,25%,94%), hsl(240,20%,92%));
+            min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
+            padding: 10px; color: var(--text);
         }
         .form-container {
-            width: 100%; max-width: 680px; background: var(--card-bg);
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border-radius: var(--radius-2xl); box-shadow: 0 24px 48px rgba(0,0,0,0.1);
-            padding: clamp(20px, 4vw, 36px); margin: 10px auto 30px;
-            border: 1.5px solid rgba(255,255,255,0.7); animation: fadeIn 0.6s ease;
+            width: 100%; max-width: 680px; background: var(--card);
+            backdrop-filter: blur(22px); border-radius: 32px;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.1); padding: 30px 25px;
+            margin-top: 10px; animation: fadeIn 0.6s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .form-header { text-align: center; margin-bottom: 20px; }
-        .form-header h1 { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, var(--primary), var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .semester-badge {
-            display: inline-flex; align-items: center; gap: 8px; background: #ede9fe; color: var(--primary-dark);
-            padding: 7px 16px; border-radius: 25px; font-size: 0.75rem; font-weight: 700; margin-bottom: 20px;
-        }
-        .form-group { margin-bottom: 14px; }
-        .form-label { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
-        .form-input {
-            width: 100%; padding: 12px 14px; font-size: 0.87rem; border: 2px solid #e5e7eb; border-radius: 10px;
-            background: #fafbfc; transition: 0.2s; outline: none;
-        }
-        .form-input:focus { border-color: var(--primary); background: #fff; }
-        .upload-area {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 16px; border: 2.5px dashed #d1d5db; border-radius: var(--radius); background: #fafbfc;
-            cursor: pointer; transition: 0.2s; position: relative;
-        }
-        .upload-area:hover { border-color: var(--primary); background: #f5f3ff; }
-        .upload-area.has-file { border-color: var(--success); background: #f0fdf7; border-style: solid; }
-        .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-        .preview-container { display: none; margin-top: 8px; border: 2px solid #e5e7eb; border-radius: var(--radius); overflow: hidden; }
-        .preview-container.show { display: block; }
-        .preview-header { display: flex; justify-content: space-between; padding: 8px 12px; background: #f9fafb; border-bottom: 1px solid #e5e7eb; }
-        .preview-filename { font-weight: 700; font-size: 0.75rem; word-break: break-all; }
-        .preview-remove { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; border-radius: 18px; padding: 5px 12px; cursor: pointer; font-size: 0.7rem; font-weight: 700; }
-        .preview-content { display: flex; align-items: center; justify-content: center; background: #fafafa; padding: 6px; max-height: 280px; overflow: auto; }
-        .preview-content img { max-width: 100%; max-height: 260px; }
-        .submit-btn {
-            width: 100%; padding: 14px; font-size: 0.92rem; font-weight: 700; color: #fff;
-            background: linear-gradient(135deg, var(--primary), var(--accent-1));
-            border: none; border-radius: var(--radius); cursor: pointer; margin-top: 10px;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; }
-        .toast {
-            position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-130px);
-            background: #1a1535; color: #fff; padding: 11px 20px; border-radius: 28px; font-size: 0.8rem;
-            font-weight: 600; z-index: 2000; transition: transform 0.4s ease;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        .toast.error-toast { background: #dc2626; }
-        .toast.success-toast { background: #059669; }
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(15,23,42,0.6); z-index: 1000;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-            opacity: 0; visibility: hidden; transition: 0.3s;
-        }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-dialog {
-            background: #fff; border-radius: var(--radius-lg); padding: 30px;
-            text-align: center; max-width: 400px; width: 100%;
-        }
-        .spinner {
-            width: 18px; height: 18px; border: 2.5px solid rgba(255,255,255,0.3);
-            border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+        .form-header { text-align:center; margin-bottom:25px; }
+        .form-header h1 { font-size:1.6rem; font-weight:800; background: linear-gradient(135deg, var(--primary), var(--accent-1), var(--accent-2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .semester-badge { display:inline-flex; gap:8px; background:#ede9fe; padding:8px 16px; border-radius:20px; font-size:0.75rem; font-weight:700; color:#4c1d95; margin-bottom:20px; }
+        .form-group { margin-bottom:15px; }
+        .form-label { display:flex; gap:6px; font-weight:700; font-size:0.7rem; text-transform:uppercase; margin-bottom:4px; }
+        .form-input { width:100%; padding:12px 14px; border:2px solid #e5e7eb; border-radius:10px; background:#fafbfc; font-size:0.87rem; outline:none; transition:0.2s; }
+        .form-input:focus { border-color:var(--primary); background:#fff; }
+        .upload-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border:2.5px dashed #d1d5db; border-radius:var(--radius); background:#fafbfc; cursor:pointer; transition:0.2s; position:relative; }
+        .upload-area:hover { border-color:var(--primary); background:#f5f3ff; }
+        .upload-area.has-file { border-color:var(--success); background:#f0fdf7; border-style:solid; }
+        .upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+        .preview-container { display:none; margin-top:8px; border:2px solid #e5e7eb; border-radius:var(--radius); overflow:hidden; }
+        .preview-container.show { display:block; }
+        .preview-header { display:flex; justify-content:space-between; padding:8px 12px; background:#f9fafb; border-bottom:1px solid #e5e7eb; }
+        .preview-filename { font-weight:700; font-size:0.75rem; word-break:break-all; }
+        .preview-remove { background:#fef2f2; color:var(--danger); border:1px solid #fecaca; border-radius:18px; padding:5px 12px; cursor:pointer; font-weight:700; font-size:0.7rem; }
+        .preview-content { display:flex; align-items:center; justify-content:center; background:#fafafa; padding:6px; max-height:280px; overflow:auto; }
+        .preview-content img { max-width:100%; max-height:260px; }
+        .submit-btn { width:100%; padding:14px; font-weight:700; color:#fff; background:linear-gradient(135deg, var(--primary), var(--accent-1)); border:none; border-radius:var(--radius); cursor:pointer; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.92rem; }
+        .submit-btn:disabled { background:#d1d5db; cursor:not-allowed; }
+        .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-130px); background:#1a1535; color:#fff; padding:11px 20px; border-radius:28px; font-size:0.8rem; font-weight:600; z-index:2000; transition:transform 0.4s; }
+        .toast.show { transform:translateX(-50%) translateY(0); }
+        .toast.error-toast { background:#dc2626; }
+        .toast.success-toast { background:#059669; }
+        .modal-overlay { position:fixed; inset:0; background:rgba(15,23,42,0.6); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; visibility:hidden; transition:0.3s; }
+        .modal-overlay.active { opacity:1; visibility:visible; }
+        .modal-dialog { background:#fff; border-radius:20px; padding:30px; text-align:center; max-width:400px; width:100%; }
+        .spinner { width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; display:inline-block; }
+        @keyframes spin { to { transform:rotate(360deg); } }
     </style>
 </head>
 <body>
 <div class="form-container">
     <div class="form-header">
         <h1>Upload Bukti Submit Jurnal & LoA</h1>
-        <p style="color: var(--text-secondary); font-size: 0.82rem;">Form Akademik</p>
+        <p style="color:#5b5480; font-size:0.82rem;">Form Akademik</p>
     </div>
     <div style="text-align:center;">
         <span class="semester-badge" id="semesterBadge">
@@ -136,7 +97,7 @@
             <input type="text" class="form-input" id="judulArtikel" name="judulArtikel" placeholder="Judul artikel">
         </div>
 
-        <hr style="margin: 20px 0; border-top: 1.5px solid #e5e7eb;">
+        <hr style="margin:20px 0; border-top:1.5px solid #e5e7eb;">
 
         <div class="form-group">
             <label class="form-label"><span>📤</span> Bukti Submit Jurnal (PDF/Image)</label>
@@ -154,7 +115,7 @@
         </div>
 
         <div class="form-group">
-            <label class="form-label"><span>🔗</span> Link Sinta</label>
+            <label class="form-label"><span>🔗</span> Link Sinta / Akreditasi</label>
             <input type="url" class="form-input" id="linkSinta" name="linkSinta" placeholder="https://sinta.kemdikbud.go.id/...">
         </div>
 
@@ -192,7 +153,7 @@
 
 <div class="modal-overlay" id="successModal">
     <div class="modal-dialog">
-        <div style="font-size: 3rem;">✅</div>
+        <div style="font-size:3rem;">✅</div>
         <h2>Upload Berhasil!</h2>
         <div style="text-align:left; background:#f9fafb; padding:12px; border-radius:8px; margin:12px 0;" id="modalDetail"></div>
         <button class="modal-close-btn" style="margin-top:12px; padding:10px 24px; background:var(--primary); color:#fff; border:none; border-radius:28px; cursor:pointer;" id="modalCloseBtn">Selesai</button>
@@ -216,16 +177,16 @@
 
         const fileBukti = document.getElementById('fileBuktiSubmit');
         const areaBukti = document.getElementById('uploadAreaBukti');
-        const prevBukti = document.getElementById('previewBukti');
-        const prevBuktiName = document.getElementById('previewBuktiName');
         const prevBuktiCont = document.getElementById('previewBuktiContent');
+        const prevBuktiName = document.getElementById('previewBuktiName');
+        const prevBukti = document.getElementById('previewBukti');
         const rmBukti = document.getElementById('removeBukti');
 
         const fileLoA = document.getElementById('fileLoA');
         const areaLoA = document.getElementById('uploadAreaLoA');
-        const prevLoA = document.getElementById('previewLoA');
-        const prevLoAName = document.getElementById('previewLoAName');
         const prevLoACont = document.getElementById('previewLoAContent');
+        const prevLoAName = document.getElementById('previewLoAName');
+        const prevLoA = document.getElementById('previewLoA');
         const rmLoA = document.getElementById('removeLoA');
 
         // Semester
@@ -265,49 +226,57 @@
             const prodi = v.substr(4,2);
             const no = v.substr(6,3);
             if (/03/.test(tahun)) { nimErr.textContent = 'Tahun tidak boleh mengandung 03'; nimErr.style.display = 'block'; return false; }
-            if (prodi !== '03') { nimErr.textContent = 'Harus terdapat kode 03 setelah tahun'; nimErr.style.display = 'block'; return false; }
+            if (prodi !== '03') { nimErr.textContent = 'Harus terdapat 03 setelah tahun'; nimErr.style.display = 'block'; return false; }
             if (/03/.test(no)) { nimErr.textContent = 'Nomor urut tidak boleh mengandung 03'; nimErr.style.display = 'block'; return false; }
             return true;
         }
 
-        // File handling
-        function handleFile(file, area, prevCont, prevName) {
+        // Helper untuk menampilkan preview file
+        function tampilkanPreview(file, area, prevCont, prevName, prevWrap) {
             if (!file) return false;
             if (file.size > MAX_SIZE) { showToast('Ukuran > 10MB', 'error-toast'); return false; }
             const ext = file.name.split('.').pop().toLowerCase();
             if (!['pdf','jpg','jpeg','png'].includes(ext)) { showToast('Format tidak didukung', 'error-toast'); return false; }
             area.classList.add('has-file');
             prevName.textContent = file.name;
-            prevCont.parentElement.classList.add('show');
+            prevWrap.classList.add('show');
             if (['jpg','jpeg','png'].includes(ext)) {
-                const r = new FileReader();
-                r.onload = e => { prevCont.innerHTML = `<img src="${e.target.result}" alt="Preview">`; };
-                r.readAsDataURL(file);
+                const reader = new FileReader();
+                reader.onload = e => prevCont.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                reader.readAsDataURL(file);
             } else {
                 prevCont.innerHTML = `<div style="padding:20px; text-align:center;">📄 ${file.name}</div>`;
             }
             return true;
         }
 
-        function clearFile(input, area, prevCont) {
+        function hapusPreview(input, area, prevWrap, prevCont) {
             input.value = '';
             area.classList.remove('has-file');
-            prevCont.parentElement.classList.remove('show');
+            prevWrap.classList.remove('show');
             prevCont.innerHTML = '';
         }
 
+        // Event untuk file Bukti
         fileBukti.addEventListener('change', function() {
-            if (this.files[0]) handleFile(this.files[0], areaBukti, prevBuktiCont, prevBuktiName);
+            if (this.files.length) tampilkanPreview(this.files[0], areaBukti, prevBuktiCont, prevBuktiName, prevBukti);
         });
-        rmBukti.addEventListener('click', (e) => { e.stopPropagation(); clearFile(fileBukti, areaBukti, prevBuktiCont); });
+        rmBukti.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hapusPreview(fileBukti, areaBukti, prevBukti, prevBuktiCont);
+        });
 
+        // Event untuk file LoA
         fileLoA.addEventListener('change', function() {
-            if (this.files[0]) handleFile(this.files[0], areaLoA, prevLoACont, prevLoAName);
+            if (this.files.length) tampilkanPreview(this.files[0], areaLoA, prevLoACont, prevLoAName, prevLoA);
         });
-        rmLoA.addEventListener('click', (e) => { e.stopPropagation(); clearFile(fileLoA, areaLoA, prevLoACont); });
+        rmLoA.addEventListener('click', (e) => {
+            e.stopPropagation();
+            hapusPreview(fileLoA, areaLoA, prevLoA, prevLoACont);
+        });
 
         // Drag & drop
-        function addDrag(area, input, prevCont, prevName) {
+        function setupDrag(area, input, prevCont, prevName, prevWrap) {
             area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
             area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
             area.addEventListener('drop', e => {
@@ -315,25 +284,30 @@
                 area.classList.remove('drag-over');
                 if (e.dataTransfer.files.length) {
                     input.files = e.dataTransfer.files;
-                    handleFile(e.dataTransfer.files[0], area, prevCont, prevName);
+                    tampilkanPreview(e.dataTransfer.files[0], area, prevCont, prevName, prevWrap);
                 }
             });
         }
-        addDrag(areaBukti, fileBukti, prevBuktiCont, prevBuktiName);
-        addDrag(areaLoA, fileLoA, prevLoACont, prevLoAName);
+        setupDrag(areaBukti, fileBukti, prevBuktiCont, prevBuktiName, prevBukti);
+        setupDrag(areaLoA, fileLoA, prevLoACont, prevLoAName, prevLoA);
 
-        // FORM SUBMIT
+        // SUBMIT FORM
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (!validateNIM()) { showToast('Periksa NIM', 'error-toast'); nim.focus(); return; }
+
+            if (!validateNIM()) {
+                showToast('Periksa NIM Anda!', 'error-toast');
+                nim.focus();
+                return;
+            }
 
             const hasBukti = fileBukti.files.length > 0;
             const hasLoA = fileLoA.files.length > 0;
-            const sinta = document.getElementById('linkSinta').value.trim();
+            const linkSinta = document.getElementById('linkSinta').value.trim();
             const linkJurnal = document.getElementById('linkJurnalLoA').value.trim();
 
-            if (!hasBukti && !hasLoA && !sinta && !linkJurnal) {
-                if (!confirm('Tidak ada file/link. Lanjutkan?')) return;
+            if (!hasBukti && !hasLoA && !linkSinta && !linkJurnal) {
+                if (!confirm('Tidak ada file/link diisi. Lanjutkan?')) return;
             }
 
             submitBtn.disabled = true;
@@ -345,35 +319,43 @@
                 fd.append('nim', nim.value.trim());
                 fd.append('judulTesis', document.getElementById('judulTesis').value.trim());
                 fd.append('judulArtikel', document.getElementById('judulArtikel').value.trim());
-                fd.append('linkSinta', sinta);
+                fd.append('linkSinta', linkSinta);
                 fd.append('namaJurnal', document.getElementById('namaJurnal').value.trim());
                 fd.append('linkJurnalLoA', linkJurnal);
                 fd.append('semester', semester.folderName);
                 fd.append('semesterCode', semester.code);
                 fd.append('timestamp', new Date().toISOString());
 
+                // Tambahkan file hanya jika ada
                 if (hasBukti) {
                     fd.append('fileBuktiSubmit', fileBukti.files[0]);
                     fd.append('fileBuktiSubmitName', fileBukti.files[0].name);
                     console.log('📎 Bukti:', fileBukti.files[0].name, fileBukti.files[0].size);
-                } else { console.warn('⚠️ Tidak ada file bukti'); }
-
+                } else {
+                    console.warn('⚠️ Tidak ada file bukti');
+                }
                 if (hasLoA) {
                     fd.append('fileLoA', fileLoA.files[0]);
                     fd.append('fileLoAName', fileLoA.files[0].name);
                     console.log('📎 LoA:', fileLoA.files[0].name, fileLoA.files[0].size);
-                } else { console.warn('⚠️ Tidak ada file loa'); }
-
-                // Debug: lihat semua key (kecuali Blob)
-                for (let [key, val] of fd.entries()) {
-                    if (val instanceof File) console.log(key, '-> File:', val.name, val.size);
-                    else console.log(key, '->', val);
+                } else {
+                    console.warn('⚠️ Tidak ada file loa');
                 }
 
-                const resp = await fetch(GAS_URL, { method: 'POST', body: fd });
-                if (!resp.ok) throw new Error('Server error: ' + resp.status);
-                const result = await resp.json();
-                console.log('📬', result);
+                // Debug: cetak semua isi FormData
+                console.log('🚀 Mengirim FormData...');
+                for (let pair of fd.entries()) {
+                    console.log(pair[0], pair[1] instanceof File ? `[File: ${pair[1].name}, ${pair[1].size}]` : pair[1]);
+                }
+
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: fd
+                });
+
+                if (!response.ok) throw new Error('Server error ' + response.status);
+                const result = await response.json();
+                console.log('📬 Respons:', result);
 
                 if (result.success) {
                     modalDetail.innerHTML = `
@@ -385,10 +367,10 @@
                     modal.classList.add('active');
                     showToast('✅ Berhasil!', 'success-toast');
                     form.reset();
-                    clearFile(fileBukti, areaBukti, prevBuktiCont);
-                    clearFile(fileLoA, areaLoA, prevLoACont);
+                    hapusPreview(fileBukti, areaBukti, prevBukti, prevBuktiCont);
+                    hapusPreview(fileLoA, areaLoA, prevLoA, prevLoACont);
                 } else {
-                    throw new Error(result.message);
+                    throw new Error(result.message || 'Gagal');
                 }
             } catch (err) {
                 console.error('❌', err);
@@ -399,13 +381,14 @@
             }
         });
 
+        // Modal
         document.getElementById('modalCloseBtn').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
         function escapeHTML(s) {
-            const d = document.createElement('div');
-            d.textContent = s;
-            return d.innerHTML;
+            const div = document.createElement('div');
+            div.textContent = s;
+            return div.innerHTML;
         }
     })();
 </script>
