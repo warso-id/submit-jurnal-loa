@@ -3,9 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Form Upload Bukti Submit Jurnal & LoA">
-    <meta name="theme-color" content="#6d28d9">
     <title>✨ Upload Bukti Jurnal & LoA</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -13,28 +10,23 @@
             --primary: hsl(260, 80%, 55%);
             --accent-1: hsl(290, 75%, 55%);
             --accent-2: hsl(320, 70%, 60%);
-            --bg: hsl(260, 30%, 96%);
             --card: rgba(255,255,255,0.88);
             --text: #1a1535;
             --success: #10b981;
             --danger: #ef4444;
-            --radius: 14px;
-            --font: 'Plus Jakarta Sans', sans-serif;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: var(--font);
-            background: linear-gradient(160deg, var(--bg), hsl(280,25%,94%), hsl(240,20%,92%));
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(160deg, hsl(260,30%,96%), hsl(280,25%,94%));
             min-height: 100vh; display: flex; justify-content: center; align-items: flex-start;
-            padding: 10px; color: var(--text);
+            padding: 20px; color: var(--text);
         }
         .form-container {
             width: 100%; max-width: 680px; background: var(--card);
             backdrop-filter: blur(22px); border-radius: 32px;
             box-shadow: 0 24px 48px rgba(0,0,0,0.1); padding: 30px 25px;
-            margin-top: 10px; animation: fadeIn 0.6s ease;
         }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
         .form-header { text-align:center; margin-bottom:25px; }
         .form-header h1 { font-size:1.6rem; font-weight:800; background: linear-gradient(135deg, var(--primary), var(--accent-1), var(--accent-2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         .semester-badge { display:inline-flex; gap:8px; background:#ede9fe; padding:8px 16px; border-radius:20px; font-size:0.75rem; font-weight:700; color:#4c1d95; margin-bottom:20px; }
@@ -42,18 +34,22 @@
         .form-label { display:flex; gap:6px; font-weight:700; font-size:0.7rem; text-transform:uppercase; margin-bottom:4px; }
         .form-input { width:100%; padding:12px 14px; border:2px solid #e5e7eb; border-radius:10px; background:#fafbfc; font-size:0.87rem; outline:none; transition:0.2s; }
         .form-input:focus { border-color:var(--primary); background:#fff; }
-        .upload-area { display:flex; align-items:center; justify-content:center; gap:10px; padding:16px; border:2.5px dashed #d1d5db; border-radius:var(--radius); background:#fafbfc; cursor:pointer; transition:0.2s; position:relative; }
+        .upload-area {
+            display:flex; align-items:center; justify-content:center; gap:10px; padding:16px;
+            border:2.5px dashed #d1d5db; border-radius:14px; background:#fafbfc; cursor:pointer;
+            transition:0.2s; position:relative;
+        }
         .upload-area:hover { border-color:var(--primary); background:#f5f3ff; }
         .upload-area.has-file { border-color:var(--success); background:#f0fdf7; border-style:solid; }
         .upload-area input[type="file"] { position:absolute; inset:0; opacity:0; cursor:pointer; }
-        .preview-container { display:none; margin-top:8px; border:2px solid #e5e7eb; border-radius:var(--radius); overflow:hidden; }
+        .preview-container { display:none; margin-top:8px; border:2px solid #e5e7eb; border-radius:14px; overflow:hidden; }
         .preview-container.show { display:block; }
         .preview-header { display:flex; justify-content:space-between; padding:8px 12px; background:#f9fafb; border-bottom:1px solid #e5e7eb; }
         .preview-filename { font-weight:700; font-size:0.75rem; word-break:break-all; }
         .preview-remove { background:#fef2f2; color:var(--danger); border:1px solid #fecaca; border-radius:18px; padding:5px 12px; cursor:pointer; font-weight:700; font-size:0.7rem; }
         .preview-content { display:flex; align-items:center; justify-content:center; background:#fafafa; padding:6px; max-height:280px; overflow:auto; }
         .preview-content img { max-width:100%; max-height:260px; }
-        .submit-btn { width:100%; padding:14px; font-weight:700; color:#fff; background:linear-gradient(135deg, var(--primary), var(--accent-1)); border:none; border-radius:var(--radius); cursor:pointer; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.92rem; }
+        .submit-btn { width:100%; padding:14px; font-weight:700; color:#fff; background:linear-gradient(135deg, var(--primary), var(--accent-1)); border:none; border-radius:14px; cursor:pointer; margin-top:12px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:0.92rem; }
         .submit-btn:disabled { background:#d1d5db; cursor:not-allowed; }
         .toast { position:fixed; top:16px; left:50%; transform:translateX(-50%) translateY(-130px); background:#1a1535; color:#fff; padding:11px 20px; border-radius:28px; font-size:0.8rem; font-weight:600; z-index:2000; transition:transform 0.4s; }
         .toast.show { transform:translateX(-50%) translateY(0); }
@@ -78,75 +74,85 @@
         </span>
     </div>
 
-    <form id="uploadForm" novalidate>
+    <!-- Form akan disubmit ke iframe tersembunyi -->
+    <form id="uploadForm" novalidate target="hiddenIframe" method="POST" enctype="multipart/form-data"
+          action="YOUR_WEBAPP_URL">
         <div class="form-group">
-            <label class="form-label"><span>✎</span> Nama Lengkap</label>
-            <input type="text" class="form-input" id="namaLengkap" name="namaLengkap" placeholder="Nama lengkap Anda" maxlength="100">
+            <label class="form-label">✎ Nama Lengkap</label>
+            <input type="text" class="form-input" name="namaLengkap" placeholder="Nama lengkap Anda" maxlength="100">
         </div>
         <div class="form-group">
-            <label class="form-label"><span>🆔</span> NIM <span style="color:var(--danger);">*</span></label>
-            <input type="text" class="form-input" id="nim" name="nim" placeholder="Contoh: 202203001" maxlength="9" required inputmode="numeric" pattern="[0-9]{9}">
+            <label class="form-label">🆔 NIM *</label>
+            <input type="text" class="form-input" name="nim" placeholder="Contoh: 202203001" maxlength="9" required inputmode="numeric" pattern="[0-9]{9}">
             <div style="color:var(--danger); font-size:0.7rem; display:none;" id="nimError"></div>
         </div>
         <div class="form-group">
-            <label class="form-label"><span>📖</span> Judul Tesis</label>
-            <input type="text" class="form-input" id="judulTesis" name="judulTesis" placeholder="Judul tesis">
+            <label class="form-label">📖 Judul Tesis</label>
+            <input type="text" class="form-input" name="judulTesis" placeholder="Judul tesis">
         </div>
         <div class="form-group">
-            <label class="form-label"><span>📝</span> Judul Artikel</label>
-            <input type="text" class="form-input" id="judulArtikel" name="judulArtikel" placeholder="Judul artikel">
+            <label class="form-label">📝 Judul Artikel</label>
+            <input type="text" class="form-input" name="judulArtikel" placeholder="Judul artikel">
         </div>
 
         <hr style="margin:20px 0; border-top:1.5px solid #e5e7eb;">
 
         <div class="form-group">
-            <label class="form-label"><span>📤</span> Bukti Submit Jurnal (PDF/Image)</label>
+            <label class="form-label">📤 Bukti Submit Jurnal (PDF/Image)</label>
             <div class="upload-area" id="uploadAreaBukti">
                 <span>☁️</span> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
-                <input type="file" id="fileBuktiSubmit" name="fileBuktiSubmit" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Bukti Submit Jurnal">
+                <input type="file" id="fileBuktiSubmit" name="fileBuktiSubmit" accept=".pdf,.jpg,.jpeg,.png">
             </div>
             <div class="preview-container" id="previewBukti">
                 <div class="preview-header">
                     <span class="preview-filename" id="previewBuktiName"></span>
-                    <button type="button" class="preview-remove" id="removeBukti"><span>🗑️</span> Hapus</button>
+                    <button type="button" class="preview-remove" id="removeBukti">🗑️ Hapus</button>
                 </div>
                 <div class="preview-content" id="previewBuktiContent"></div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label"><span>🔗</span> Link Sinta / Akreditasi</label>
-            <input type="url" class="form-input" id="linkSinta" name="linkSinta" placeholder="https://sinta.kemdikbud.go.id/...">
+            <label class="form-label">🔗 Link Sinta / Akreditasi</label>
+            <input type="url" class="form-input" name="linkSinta" placeholder="https://sinta.kemdikbud.go.id/...">
         </div>
 
         <div class="form-group">
-            <label class="form-label"><span>📤</span> Dokumen LoA (PDF/Image)</label>
+            <label class="form-label">📤 Dokumen LoA (PDF/Image)</label>
             <div class="upload-area" id="uploadAreaLoA">
                 <span>☁️</span> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
-                <input type="file" id="fileLoA" name="fileLoA" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload Dokumen LoA">
+                <input type="file" id="fileLoA" name="fileLoA" accept=".pdf,.jpg,.jpeg,.png">
             </div>
             <div class="preview-container" id="previewLoA">
                 <div class="preview-header">
                     <span class="preview-filename" id="previewLoAName"></span>
-                    <button type="button" class="preview-remove" id="removeLoA"><span>🗑️</span> Hapus</button>
+                    <button type="button" class="preview-remove" id="removeLoA">🗑️ Hapus</button>
                 </div>
                 <div class="preview-content" id="previewLoAContent"></div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="form-label"><span>📰</span> Nama Jurnal</label>
-            <input type="text" class="form-input" id="namaJurnal" name="namaJurnal" placeholder="Nama jurnal">
+            <label class="form-label">📰 Nama Jurnal</label>
+            <input type="text" class="form-input" name="namaJurnal" placeholder="Nama jurnal">
         </div>
         <div class="form-group">
-            <label class="form-label"><span>🔗</span> Link Jurnal / LoA</label>
-            <input type="url" class="form-input" id="linkJurnalLoA" name="linkJurnalLoA" placeholder="https://...">
+            <label class="form-label">🔗 Link Jurnal / LoA</label>
+            <input type="url" class="form-input" name="linkJurnalLoA" placeholder="https://...">
         </div>
+
+        <!-- Hidden fields untuk semester & timestamp -->
+        <input type="hidden" name="semester" id="semesterField">
+        <input type="hidden" name="semesterCode" id="semesterCodeField">
+        <input type="hidden" name="timestamp" id="timestampField">
 
         <button type="submit" class="submit-btn" id="submitBtn">
             <span>📨</span> Kirim Dokumen
         </button>
     </form>
+
+    <!-- Hidden iframe untuk menerima respons -->
+    <iframe name="hiddenIframe" style="display:none;" id="hiddenIframe"></iframe>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -156,40 +162,16 @@
         <div style="font-size:3rem;">✅</div>
         <h2>Upload Berhasil!</h2>
         <div style="text-align:left; background:#f9fafb; padding:12px; border-radius:8px; margin:12px 0;" id="modalDetail"></div>
-        <button class="modal-close-btn" style="margin-top:12px; padding:10px 24px; background:var(--primary); color:#fff; border:none; border-radius:28px; cursor:pointer;" id="modalCloseBtn">Selesai</button>
+        <button id="modalCloseBtn" style="margin-top:12px; padding:10px 24px; background:var(--primary); color:#fff; border:none; border-radius:28px; cursor:pointer;">Selesai</button>
     </div>
 </div>
 
 <script>
+    // Ganti dengan URL Apps Script Anda
+    const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwrF1D3GcwsOckggslr3Vzep4MfaoEyd7Y--ksNijNFhzZJXLtnKqrx7iKtx9sRMRGg/exec';
+
     (function() {
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbzv_FrKwTRuE9ll_F7nxKd2FP1rYwkAWopsaLvdfJPBVoxS6MMteDMp0KBtr_MA88xe/exec';
-        const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-
-        // DOM elements
-        const form = document.getElementById('uploadForm');
-        const nim = document.getElementById('nim');
-        const nimErr = document.getElementById('nimError');
-        const toast = document.getElementById('toast');
-        const modal = document.getElementById('successModal');
-        const modalDetail = document.getElementById('modalDetail');
-        const semLabel = document.getElementById('semesterLabel');
-        const submitBtn = document.getElementById('submitBtn');
-
-        const fileBukti = document.getElementById('fileBuktiSubmit');
-        const areaBukti = document.getElementById('uploadAreaBukti');
-        const prevBukti = document.getElementById('previewBukti');
-        const prevBuktiName = document.getElementById('previewBuktiName');
-        const prevBuktiCont = document.getElementById('previewBuktiContent');
-        const rmBukti = document.getElementById('removeBukti');
-
-        const fileLoA = document.getElementById('fileLoA');
-        const areaLoA = document.getElementById('uploadAreaLoA');
-        const prevLoA = document.getElementById('previewLoA');
-        const prevLoAName = document.getElementById('previewLoAName');
-        const prevLoACont = document.getElementById('previewLoAContent');
-        const rmLoA = document.getElementById('removeLoA');
-
-        // Semester
+        // Semester otomatis
         function getSemester() {
             const now = new Date();
             const m = now.getMonth();
@@ -201,18 +183,14 @@
             }
         }
         const semester = getSemester();
-        semLabel.textContent = semester.label;
+        document.getElementById('semesterLabel').textContent = semester.label;
+        document.getElementById('semesterField').value = semester.folderName;
+        document.getElementById('semesterCodeField').value = semester.code;
+        document.getElementById('timestampField').value = new Date().toISOString();
 
-        // Toast
-        let toastTimer;
-        function showToast(msg, type = '') {
-            clearTimeout(toastTimer);
-            toast.textContent = msg;
-            toast.className = 'toast ' + type + ' show';
-            toastTimer = setTimeout(() => toast.classList.remove('show'), 3500);
-        }
-
-        // NIM validation
+        // Validasi NIM
+        const nim = document.forms[0].nim;
+        const nimErr = document.getElementById('nimError');
         nim.addEventListener('input', function() {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0,9);
             validateNIM();
@@ -231,165 +209,99 @@
             return true;
         }
 
-        // Helper: convert file to base64 string
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result); // includes data:*;base64,...
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        }
-
-        // Preview
+        // Preview file
         function tampilkanPreview(file, area, prevWrap, prevName, prevCont) {
             if (!file) return;
-            if (file.size > MAX_SIZE) {
-                showToast('Ukuran file > 10MB', 'error-toast');
-                return;
-            }
+            if (file.size > 10*1024*1024) { toast('Ukuran > 10MB', 'error'); return; }
             const ext = file.name.split('.').pop().toLowerCase();
-            if (!['pdf','jpg','jpeg','png'].includes(ext)) {
-                showToast('Format tidak didukung', 'error-toast');
-                return;
-            }
+            if (!['pdf','jpg','jpeg','png'].includes(ext)) { toast('Format tidak didukung', 'error'); return; }
             area.classList.add('has-file');
             prevName.textContent = file.name;
             prevWrap.classList.add('show');
             if (['jpg','jpeg','png'].includes(ext)) {
-                const reader = new FileReader();
-                reader.onload = e => prevCont.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
-                reader.readAsDataURL(file);
+                const r = new FileReader();
+                r.onload = e => prevCont.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                r.readAsDataURL(file);
             } else {
                 prevCont.innerHTML = `<div style="padding:20px; text-align:center;">📄 ${file.name}</div>`;
             }
         }
 
-        function hapusPreview(input, area, prevWrap, prevCont) {
-            input.value = '';
-            area.classList.remove('has-file');
-            prevWrap.classList.remove('show');
-            prevCont.innerHTML = '';
+        const fileBukti = document.getElementById('fileBuktiSubmit');
+        const fileLoA = document.getElementById('fileLoA');
+        fileBukti.addEventListener('change', () => { if(fileBukti.files[0]) tampilkanPreview(fileBukti.files[0], document.getElementById('uploadAreaBukti'), document.getElementById('previewBukti'), document.getElementById('previewBuktiName'), document.getElementById('previewBuktiContent')); });
+        fileLoA.addEventListener('change', () => { if(fileLoA.files[0]) tampilkanPreview(fileLoA.files[0], document.getElementById('uploadAreaLoA'), document.getElementById('previewLoA'), document.getElementById('previewLoAName'), document.getElementById('previewLoAContent')); });
+
+        document.getElementById('removeBukti').addEventListener('click', () => { fileBukti.value=''; document.getElementById('uploadAreaBukti').classList.remove('has-file'); document.getElementById('previewBukti').classList.remove('show'); });
+        document.getElementById('removeLoA').addEventListener('click', () => { fileLoA.value=''; document.getElementById('uploadAreaLoA').classList.remove('has-file'); document.getElementById('previewLoA').classList.remove('show'); });
+
+        // Toast
+        function toast(msg, type) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + (type==='error'?'error-toast':'success-toast') + ' show';
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
         }
 
-        fileBukti.addEventListener('change', () => {
-            if (fileBukti.files.length) tampilkanPreview(fileBukti.files[0], areaBukti, prevBukti, prevBuktiName, prevBuktiCont);
-        });
-        rmBukti.addEventListener('click', (e) => {
-            e.stopPropagation();
-            hapusPreview(fileBukti, areaBukti, prevBukti, prevBuktiCont);
+        // Submit form dengan target iframe
+        const form = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const iframe = document.getElementById('hiddenIframe');
+        const modal = document.getElementById('successModal');
+        const modalDetail = document.getElementById('modalDetail');
+
+        // Tangkap pesan dari iframe
+        window.addEventListener('message', (event) => {
+            if (event.origin !== 'https://script.googleusercontent.com' && event.origin !== 'https://script.google.com') return;
+            const result = event.data;
+            if (result.success) {
+                modalDetail.innerHTML = `
+                    <strong>Nama:</strong> ${result.data?.namaLengkap || ''}<br>
+                    <strong>NIM:</strong> ${result.data?.nim || ''}<br>
+                    <strong>File Bukti:</strong> ${result.data?.fileLinks?.buktiSubmit ? '✅ Terupload' : '❌ Tidak ada'}<br>
+                    <strong>File LoA:</strong> ${result.data?.fileLinks?.loa ? '✅ Terupload' : '❌ Tidak ada'}
+                `;
+                modal.classList.add('active');
+                toast('✅ Berhasil!', 'success');
+                form.reset();
+                document.querySelectorAll('.upload-area').forEach(a => a.classList.remove('has-file'));
+                document.querySelectorAll('.preview-container').forEach(p => p.classList.remove('show'));
+            } else {
+                toast('❌ ' + (result.message || 'Gagal'), 'error');
+            }
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<span>📨</span> Kirim Dokumen';
         });
 
-        fileLoA.addEventListener('change', () => {
-            if (fileLoA.files.length) tampilkanPreview(fileLoA.files[0], areaLoA, prevLoA, prevLoAName, prevLoACont);
-        });
-        rmLoA.addEventListener('click', (e) => {
-            e.stopPropagation();
-            hapusPreview(fileLoA, areaLoA, prevLoA, prevLoACont);
-        });
-
-        // Drag & drop
-        function setupDrag(area, input, prevWrap, prevName, prevCont) {
-            area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
-            area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
-            area.addEventListener('drop', e => {
-                e.preventDefault();
-                area.classList.remove('drag-over');
-                if (e.dataTransfer.files.length) {
-                    input.files = e.dataTransfer.files;
-                    tampilkanPreview(e.dataTransfer.files[0], area, prevWrap, prevName, prevCont);
-                }
-            });
-        }
-        setupDrag(areaBukti, fileBukti, prevBukti, prevBuktiName, prevBuktiCont);
-        setupDrag(areaLoA, fileLoA, prevLoA, prevLoAName, prevLoACont);
-
-        // SUBMIT
-        form.addEventListener('submit', async function(e) {
-            e.preventDefault();
+        form.addEventListener('submit', (e) => {
             if (!validateNIM()) {
-                showToast('Periksa NIM', 'error-toast');
+                e.preventDefault();
+                toast('Periksa NIM Anda!', 'error');
                 nim.focus();
                 return;
             }
-
             const hasBukti = fileBukti.files.length > 0;
             const hasLoA = fileLoA.files.length > 0;
-            const linkSinta = document.getElementById('linkSinta').value.trim();
-            const linkJurnal = document.getElementById('linkJurnalLoA').value.trim();
-
+            const linkSinta = document.querySelector('[name="linkSinta"]').value.trim();
+            const linkJurnal = document.querySelector('[name="linkJurnalLoA"]').value.trim();
             if (!hasBukti && !hasLoA && !linkSinta && !linkJurnal) {
-                if (!confirm('Tidak ada file/link. Lanjutkan?')) return;
+                if (!confirm('Tidak ada file/link diisi. Lanjutkan?')) {
+                    e.preventDefault();
+                    return;
+                }
             }
-
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span> Mengirim...';
-
-            try {
-                const payload = {
-                    namaLengkap: document.getElementById('namaLengkap').value.trim() || 'NN',
-                    nim: nim.value.trim(),
-                    judulTesis: document.getElementById('judulTesis').value.trim(),
-                    judulArtikel: document.getElementById('judulArtikel').value.trim(),
-                    linkSinta: linkSinta,
-                    namaJurnal: document.getElementById('namaJurnal').value.trim(),
-                    linkJurnalLoA: linkJurnal,
-                    semester: semester.folderName,
-                    semesterCode: semester.code,
-                    timestamp: new Date().toISOString()
-                };
-
-                // Convert files to base64
-                if (hasBukti) {
-                    payload.fileBuktiSubmitBase64 = await fileToBase64(fileBukti.files[0]);
-                    payload.fileBuktiSubmitName = fileBukti.files[0].name;
-                }
-                if (hasLoA) {
-                    payload.fileLoABase64 = await fileToBase64(fileLoA.files[0]);
-                    payload.fileLoAName = fileLoA.files[0].name;
-                }
-
-                const response = await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) throw new Error('Server error: ' + response.status);
-                const result = await response.json();
-
-                if (result.success) {
-                    modalDetail.innerHTML = `
-                        <strong>Nama:</strong> ${escapeHTML(result.data?.namaLengkap || '')}<br>
-                        <strong>NIM:</strong> ${result.data?.nim || ''}<br>
-                        <strong>File Bukti:</strong> ${result.data?.fileLinks?.buktiSubmit ? '✅ Terupload' : '❌ Tidak ada'}<br>
-                        <strong>File LoA:</strong> ${result.data?.fileLinks?.loa ? '✅ Terupload' : '❌ Tidak ada'}
-                    `;
-                    modal.classList.add('active');
-                    showToast('✅ Berhasil!', 'success-toast');
-                    form.reset();
-                    hapusPreview(fileBukti, areaBukti, prevBukti, prevBuktiCont);
-                    hapusPreview(fileLoA, areaLoA, prevLoA, prevLoACont);
-                } else {
-                    throw new Error(result.message || 'Gagal');
-                }
-            } catch (err) {
-                showToast('❌ ' + err.message, 'error-toast');
-                console.error(err);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<span>📨</span> Kirim Dokumen';
-            }
+            // Form akan dikirim ke iframe
         });
 
         document.getElementById('modalCloseBtn').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
-        function escapeHTML(s) {
-            const div = document.createElement('div');
-            div.textContent = s;
-            return div.innerHTML;
-        }
+        // Update action URL form
+        form.action = WEBAPP_URL;
+        form.target = 'hiddenIframe';
     })();
 </script>
 </body>
