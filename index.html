@@ -4,19 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Form Upload Bukti Submit Jurnal & LoA - Secure & Elegant">
+    <meta name="description" content="Form Upload Bukti Submit Jurnal & LoA">
     <meta name="theme-color" content="#6d28d9">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <title>✨ Upload Bukti Jurnal & LoA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
-          crossorigin="anonymous" referrerpolicy="no-referrer">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           GLOBAL STYLES (dipertahankan sepenuhnya)
+           GLOBAL STYLES
            ============================================================ */
         :root {
             --hue: 260;
@@ -32,13 +26,11 @@
             --card-border: rgba(255, 255, 255, 0.7);
             --text-primary: #1a1535;
             --text-secondary: #5b5480;
-            --text-muted: #a8a3c0;
             --success: #10b981;
             --danger: #ef4444;
             --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
             --shadow-md: 0 8px 16px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04);
-            --shadow-lg: 0 16px 32px rgba(0,0,0,0.08), 0 8px 16px rgba(0,0,0,0.04);
             --shadow-xl: 0 24px 48px rgba(0,0,0,0.1), 0 12px 24px rgba(0,0,0,0.05);
             --shadow-glow: 0 0 0 4px rgba(109, 40, 217, 0.12);
             --shadow-glow-lg: 0 0 40px rgba(109, 40, 217, 0.15);
@@ -101,7 +93,6 @@
         }
         .form-group { margin-bottom: 14px; }
         .form-label { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.7rem; color: var(--text-primary); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.03em; }
-        .form-label i { color: var(--primary); }
         .form-input {
             width: 100%; padding: 12px 14px; font-size: 0.87rem; font-family: var(--font); font-weight: 500;
             border: 2px solid #e5e7eb; border-radius: var(--radius-sm); background: #fafbfc; color: var(--text-primary);
@@ -131,7 +122,7 @@
             display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 10px;
             box-shadow: 0 8px 24px rgba(109, 40, 217, 0.35);
         }
-        .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; box-shadow: none; }
+        .submit-btn:disabled { background: #d1d5db; cursor: not-allowed; box-shadow: none; animation: none; }
         .toast {
             position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-130px);
             background: #1a1535; color: #fff; padding: 11px 20px; border-radius: 28px; font-size: 0.8rem;
@@ -164,6 +155,13 @@
             .form-input { padding: 10px 12px; font-size: 0.82rem; }
             .upload-area { padding: 13px 10px; }
         }
+        /* Spinner */
+        .spinner {
+            display: inline-block; width: 18px; height: 18px;
+            border: 2.5px solid rgba(255,255,255,0.3); border-top-color: #fff;
+            border-radius: 50%; animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -177,7 +175,7 @@
         </div>
         <div style="text-align:center;">
             <span class="semester-badge" id="semesterBadge">
-                <i class="fa-solid fa-calendar-star"></i>
+                <span>📅⭐</span>
                 <span id="semesterLabel">Memuat...</span>
             </span>
         </div>
@@ -185,26 +183,26 @@
         <form id="uploadForm" novalidate>
             <!-- Nama Lengkap -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-user-pen"></i> Nama Lengkap</label>
+                <label class="form-label"><span>✎</span> Nama Lengkap</label>
                 <input type="text" class="form-input" id="namaLengkap" name="namaLengkap" placeholder="Tulis nama lengkap Anda" maxlength="100">
             </div>
 
             <!-- NIM -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-fingerprint"></i> NIM <span style="color:var(--danger);">*</span></label>
+                <label class="form-label"><span>🆔</span> NIM <span style="color:var(--danger);">*</span></label>
                 <input type="text" class="form-input" id="nim" name="nim" placeholder="Contoh: 202203001" maxlength="9" required inputmode="numeric" pattern="[0-9]{9}">
                 <div style="color:var(--danger); font-size:0.7rem; display:none;" id="nimError"></div>
             </div>
 
             <!-- Judul Tesis -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-book-open"></i> Judul Tesis</label>
+                <label class="form-label"><span>📖</span> Judul Tesis</label>
                 <input type="text" class="form-input" id="judulTesis" name="judulTesis" placeholder="Masukkan judul tesis" maxlength="300">
             </div>
 
             <!-- Judul Artikel -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-file-signature"></i> Judul Artikel</label>
+                <label class="form-label"><span>📝</span> Judul Artikel</label>
                 <input type="text" class="form-input" id="judulArtikel" name="judulArtikel" placeholder="Masukkan judul artikel" maxlength="300">
             </div>
 
@@ -212,15 +210,15 @@
 
             <!-- Bukti Submit -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-file-arrow-up"></i> Bukti Submit Jurnal (PDF/Image)</label>
+                <label class="form-label"><span>📤</span> Bukti Submit Jurnal (PDF/Image)</label>
                 <div class="upload-area" id="uploadAreaBukti">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
+                    <span>☁️</span> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
                     <input type="file" id="fileBuktiSubmit" name="fileBuktiSubmit" accept=".pdf,.jpg,.jpeg,.png">
                 </div>
                 <div class="preview-container" id="previewBukti">
                     <div class="preview-header">
                         <span class="preview-filename" id="previewBuktiName"></span>
-                        <button type="button" class="preview-remove" id="removeBukti"><i class="fa-solid fa-trash-can"></i> Hapus</button>
+                        <button type="button" class="preview-remove" id="removeBukti"><span>🗑️</span> Hapus</button>
                     </div>
                     <div class="preview-content" id="previewBuktiContent"></div>
                 </div>
@@ -228,21 +226,21 @@
 
             <!-- Link Sinta -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-link"></i> Link Sinta / Akreditasi</label>
+                <label class="form-label"><span>🔗</span> Link Sinta / Akreditasi</label>
                 <input type="url" class="form-input" id="linkSinta" name="linkSinta" placeholder="https://sinta.kemdikbud.go.id/...">
             </div>
 
             <!-- Dokumen LoA -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-file-arrow-up"></i> Dokumen LoA (PDF/Image)</label>
+                <label class="form-label"><span>📤</span> Dokumen LoA (PDF/Image)</label>
                 <div class="upload-area" id="uploadAreaLoA">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
+                    <span>☁️</span> <span>Pilih File</span> <small>(PDF/JPG/PNG)</small>
                     <input type="file" id="fileLoA" name="fileLoA" accept=".pdf,.jpg,.jpeg,.png">
                 </div>
                 <div class="preview-container" id="previewLoA">
                     <div class="preview-header">
                         <span class="preview-filename" id="previewLoAName"></span>
-                        <button type="button" class="preview-remove" id="removeLoA"><i class="fa-solid fa-trash-can"></i> Hapus</button>
+                        <button type="button" class="preview-remove" id="removeLoA"><span>🗑️</span> Hapus</button>
                     </div>
                     <div class="preview-content" id="previewLoAContent"></div>
                 </div>
@@ -250,19 +248,19 @@
 
             <!-- Nama Jurnal -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-newspaper"></i> Nama Jurnal</label>
+                <label class="form-label"><span>📰</span> Nama Jurnal</label>
                 <input type="text" class="form-input" id="namaJurnal" name="namaJurnal" placeholder="Masukkan nama jurnal" maxlength="200">
             </div>
 
             <!-- Link Jurnal LoA -->
             <div class="form-group">
-                <label class="form-label"><i class="fa-solid fa-link"></i> Link Jurnal / LoA</label>
+                <label class="form-label"><span>🔗</span> Link Jurnal / LoA</label>
                 <input type="url" class="form-input" id="linkJurnalLoA" name="linkJurnalLoA" placeholder="https://...">
             </div>
 
             <!-- Submit -->
             <button type="submit" class="submit-btn" id="submitBtn">
-                <i class="fa-solid fa-paper-plane"></i> Kirim Dokumen
+                <span>📨</span> Kirim Dokumen
             </button>
         </form>
     </div>
@@ -273,7 +271,7 @@
     <!-- Success Modal -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-dialog">
-            <div style="font-size: 3rem; color: var(--success);">✅</div>
+            <div style="font-size: 3rem;">✅</div>
             <h2 style="margin: 0.5rem 0;">Upload Berhasil!</h2>
             <p>Data dan dokumen telah tersimpan.</p>
             <div style="text-align: left; background: #f9fafb; padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 0.8rem;" id="modalDetail"></div>
@@ -353,7 +351,7 @@
             }
 
             // ============================================================
-            // VALIDASI NIM (harus 9 digit & mengandung "03")
+            // VALIDASI NIM (aturan baru)
             // ============================================================
             nimInput.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, '').slice(0, 9);
@@ -374,8 +372,25 @@
                     nimError.style.display = 'block';
                     return false;
                 }
-                if (!val.includes('03')) {
-                    nimError.textContent = 'NIM wajib mengandung "03". Contoh: 202203001';
+                const tahun = val.substring(0, 4);
+                const prodi = val.substring(4, 6);
+                const nomor = val.substring(6, 9);
+
+                // Tahun tidak boleh mengandung "03"
+                if (/03/.test(tahun)) {
+                    nimError.textContent = 'Tahun (4 digit awal) tidak boleh mengandung "03".';
+                    nimError.style.display = 'block';
+                    return false;
+                }
+                // Harus diikuti "03"
+                if (prodi !== '03') {
+                    nimError.textContent = 'Harus terdapat kode "03" setelah tahun.';
+                    nimError.style.display = 'block';
+                    return false;
+                }
+                // Nomor urut (3 digit) tidak boleh mengandung "03"
+                if (/03/.test(nomor)) {
+                    nimError.textContent = 'Nomor urut (3 digit akhir) tidak boleh mengandung "03".';
                     nimError.style.display = 'block';
                     return false;
                 }
@@ -383,21 +398,19 @@
             }
 
             // ============================================================
-            // FILE HANDLING (simpel, tanpa abstraksi rumit)
+            // FILE HANDLING
             // ============================================================
             function handleFile(file, uploadArea, previewContainer, previewNameEl, previewContentEl) {
-                if (!file) return;
-                // Validasi ukuran
+                if (!file) return false;
                 if (file.size > MAX_FILE_SIZE) {
                     showToast('Ukuran file > 10MB! Maksimal 10MB.', 'error-toast');
                     return false;
                 }
                 const ext = file.name.split('.').pop().toLowerCase();
                 if (!['pdf','jpg','jpeg','png'].includes(ext)) {
-                    showToast('Format file tidak didukung! (PDF/JPG/PNG)', 'error-toast');
+                    showToast('Format tidak didukung! (PDF/JPG/PNG)', 'error-toast');
                     return false;
                 }
-                // Tampilkan preview
                 uploadArea.classList.add('has-file');
                 previewNameEl.textContent = file.name;
                 previewContainer.classList.add('show');
@@ -408,7 +421,7 @@
                     };
                     reader.readAsDataURL(file);
                 } else {
-                    previewContentEl.innerHTML = `<div style="text-align:center; padding:20px;"><i class="fa-solid fa-file-pdf" style="font-size:2rem; color:#ef4444;"></i><p>${file.name}</p></div>`;
+                    previewContentEl.innerHTML = `<div style="text-align:center; padding:20px;"><span style="font-size:2rem; color:#ef4444;">📄</span><p>${file.name}</p></div>`;
                 }
                 return true;
             }
@@ -422,9 +435,7 @@
 
             // Event Bukti Submit
             fileBuktiSubmit.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    handleFile(this.files[0], uploadAreaBukti, previewBukti, previewBuktiName, previewBuktiContent);
-                }
+                if (this.files.length > 0) handleFile(this.files[0], uploadAreaBukti, previewBukti, previewBuktiName, previewBuktiContent);
             });
             removeBukti.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -433,16 +444,14 @@
 
             // Event LoA
             fileLoA.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    handleFile(this.files[0], uploadAreaLoA, previewLoA, previewLoAName, previewLoAContent);
-                }
+                if (this.files.length > 0) handleFile(this.files[0], uploadAreaLoA, previewLoA, previewLoAName, previewLoAContent);
             });
             removeLoA.addEventListener('click', function(e) {
                 e.stopPropagation();
                 clearFile(fileLoA, uploadAreaLoA, previewLoA, previewLoAContent);
             });
 
-            // Drag & drop (optional, tetap dipertahankan)
+            // Drag & drop
             function setupDragDrop(uploadArea, fileInput, previewContainer, previewNameEl, previewContentEl) {
                 uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
                 uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
@@ -464,27 +473,23 @@
             form.addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                // Validasi NIM
                 if (!validateNIM()) {
-                    showToast('Periksa NIM Anda! Wajib 9 digit & mengandung "03".', 'error-toast');
+                    showToast('Periksa NIM Anda!', 'error-toast');
                     nimInput.focus();
                     return;
                 }
 
-                // Cek minimal ada satu lampiran (file atau link)
                 const hasBuktiFile = fileBuktiSubmit.files.length > 0;
                 const hasLoAFile = fileLoA.files.length > 0;
                 const linkSintaVal = document.getElementById('linkSinta').value.trim();
                 const linkJurnalLoAVal = document.getElementById('linkJurnalLoA').value.trim();
 
                 if (!hasBuktiFile && !hasLoAFile && !linkSintaVal && !linkJurnalLoAVal) {
-                    const konfirmasi = confirm('Tidak ada file atau link yang diisi. Lanjutkan?');
-                    if (!konfirmasi) return;
+                    if (!confirm('Tidak ada file/link diisi. Lanjutkan?')) return;
                 }
 
-                // Disable tombol
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner" style="display:inline-block; width:18px; height:18px; border:2.5px solid rgba(255,255,255,0.3); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;"></span> Mengirim...';
+                submitBtn.innerHTML = '<span class="spinner"></span> Mengirim...';
 
                 try {
                     const formData = new FormData();
@@ -499,31 +504,18 @@
                     formData.append('semesterCode', semester.code);
                     formData.append('timestamp', new Date().toISOString());
 
-                    // Tambahkan file hanya jika ada
                     if (hasBuktiFile) {
                         formData.append('fileBuktiSubmit', fileBuktiSubmit.files[0]);
                         formData.append('fileBuktiSubmitName', fileBuktiSubmit.files[0].name);
-                        console.log('✅ Menambahkan file Bukti:', fileBuktiSubmit.files[0].name);
-                    } else {
-                        console.warn('⚠️ Tidak ada file Bukti yang dipilih.');
                     }
                     if (hasLoAFile) {
                         formData.append('fileLoA', fileLoA.files[0]);
                         formData.append('fileLoAName', fileLoA.files[0].name);
-                        console.log('✅ Menambahkan file LoA:', fileLoA.files[0].name);
-                    } else {
-                        console.warn('⚠️ Tidak ada file LoA yang dipilih.');
                     }
 
-                    // Kirim
-                    const response = await fetch(GAS_URL, {
-                        method: 'POST',
-                        body: formData
-                    });
-
+                    const response = await fetch(GAS_URL, { method: 'POST', body: formData });
                     if (!response.ok) throw new Error(`Server error (${response.status})`);
                     const result = await response.json();
-                    console.log('📬 Respons:', result);
 
                     if (result.success) {
                         modalDetail.innerHTML = `
@@ -535,8 +527,6 @@
                         `;
                         successModal.classList.add('active');
                         showToast('✅ Berhasil disimpan!', 'success-toast');
-
-                        // Reset form
                         form.reset();
                         clearFile(fileBuktiSubmit, uploadAreaBukti, previewBukti, previewBuktiContent);
                         clearFile(fileLoA, uploadAreaLoA, previewLoA, previewLoAContent);
@@ -544,38 +534,25 @@
                         throw new Error(result.message || 'Gagal menyimpan data');
                     }
                 } catch (error) {
-                    console.error('❌ Error:', error);
                     showToast('❌ ' + error.message, 'error-toast');
                 } finally {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Kirim Dokumen';
+                    submitBtn.innerHTML = '<span>📨</span> Kirim Dokumen';
                 }
             });
 
             // ============================================================
             // MODAL
             // ============================================================
-            document.getElementById('modalCloseBtn').addEventListener('click', () => {
-                successModal.classList.remove('active');
-            });
-            successModal.addEventListener('click', function(e) {
-                if (e.target === successModal) successModal.classList.remove('active');
-            });
-
-            // Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && successModal.classList.contains('active')) {
-                    successModal.classList.remove('active');
-                }
-            });
+            document.getElementById('modalCloseBtn').addEventListener('click', () => successModal.classList.remove('active'));
+            successModal.addEventListener('click', e => { if (e.target === successModal) successModal.classList.remove('active'); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && successModal.classList.contains('active')) successModal.classList.remove('active'); });
 
             function escapeHTML(str) {
                 const div = document.createElement('div');
                 div.textContent = str;
                 return div.innerHTML;
             }
-
-            console.log('✨ Form siap. Semester:', semester.label);
         })();
     </script>
 </body>
